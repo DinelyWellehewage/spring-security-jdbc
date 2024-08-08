@@ -22,7 +22,11 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     DataSource dataSource;
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.jdbcAuthentication().dataSource(dataSource);
+        auth.jdbcAuthentication().dataSource(dataSource).usersByUsernameQuery("select username,password,enabled" +
+                        " from users " +
+                        "where username = ?")
+                .authoritiesByUsernameQuery("select username,authority " +
+                        "from authorities where username = ?");
     }
     @Bean
     public PasswordEncoder getPasswordEncoder() {
